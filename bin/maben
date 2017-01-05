@@ -1,3 +1,36 @@
 #!/bin/bash
 
+FLAG=$MABEN_PATH/maben_updated
+LASTMOD_MAX=604800 #7 days
+
+echo $FLAG;
 echo "$(tput setaf 2)$MABEN $(tput sgr0)"
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+echo $FLAG
+
+case $key in
+    -h|--help)
+    ;;
+    update)
+		cd $MABEN_PATH && git pull
+    ;;
+    --check)
+		if [ ! -f $FLAG ]; then
+			touch $FLAG
+		fi
+		lastmod=$(( $(date +%s) - $(stat -c %Y $FLAG) ))
+		if [ $lastmod -gt $LASTMOD_MAX ]; then
+			echo -e "Please, update script. Use \"maben update\" command."
+		fi
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+

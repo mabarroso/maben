@@ -20,10 +20,10 @@ fi
 
 if [ -z ${MABEN+x} ]; then
 	export MABEN="maben v$VERSION.$(($VERSION_COUNT + 1)) initializated at `date` to $DIR"
+	export MABEN_PATH=$DIR
 	export PATH=$PATH:$DIR/bin
 else
 	echo "maben already initializated";
 fi
 
-maben
-
+maben --check
