@@ -10,8 +10,6 @@ while [[ $# -gt 0 ]]
 do
 key="$1"
 
-echo $FLAG
-
 case $key in
     -h|--help)
     ;;
