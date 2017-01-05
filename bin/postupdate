@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "$(tput setaf 3)Close term and reopen for the changes to take effect $(tput sgr0)"

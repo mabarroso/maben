@@ -1,0 +1,22 @@
+#!/bin/bash
+
+cmds=(git tmux vi)
+
+echo "$(tput setaf 3)Checking maben dependencies... $(tput sgr0)"
+
+fails=0
+for cmd in ${cmds[@]}; do
+    if hash $cmd 2>/dev/null; then
+        echo "  $(tput setaf 2)OK$(tput sgr0) $cmd"
+    else
+    	fails=$(($fails + 1))
+        echo "  $(tput setaf 1)KO$(tput sgr0) $cmd must be installed"
+    fi
+done
+
+if [ $fails -gt 0 ]; then
+  	exit 1
+elses
+	exit 0
+fi
+

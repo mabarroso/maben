@@ -15,16 +15,22 @@ VERSION="$( date --date @$VDATE_TIMESTAMP +'%y%m%d')"
 VERSION_COUNT="$( cd ${DIR} && git rev-list --count --since=$VDATE HEAD)"
 
 if [ ! -f $FLAG ]; then
-	echo "source $DIR/init" >> ~/.bashrc
-    touch $FLAG
+	$DIR/bin/dependencies
+	if [ $? -eq 0 ]; then
+		echo "source $DIR/init" >> ~/.bashrc
+		touch $FLAG
+	else
+		echo "$(tput setaf 1)Not installed $(tput sgr0)"
+	fi
 fi
 
-if [ -z ${MABEN+x} ]; then
-	export MABEN="maben v$VERSION.$VERSION_COUNT initializated at `date` to $DIR"
-	export MABEN_PATH=$DIR
-	export PATH=$PATH:$DIR/bin
-else
-	echo "maben already initializated";
+if [ -f $FLAG ]; then
+	if [ -z ${MABEN+x} ]; then
+		export MABEN="maben v$VERSION.$VERSION_COUNT initializated at `date` to $DIR"
+		export MABEN_PATH=$DIR
+		export PATH=$PATH:$DIR/bin
+	else
+		echo "maben already initializated";
+	fi
+	maben --check
 fi
-
-maben --check

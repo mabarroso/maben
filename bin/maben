@@ -12,9 +12,20 @@ key="$1"
 case $key in
     -h|--help)
     ;;
+    -v|--version)
+    ;;
     update)
+    	echo "$(tput setaf 3)Updating... $(tput sgr0)"
 		cd $MABEN_PATH && git pull && touch $FLAG
-		unset $MABEN && $MABEN_PATH/init
+		#unset MABEN && source $MABEN_PATH/init
+		$MABEN_PATH/bin/dependencies
+		if [ $? -eq 0 ]; then
+			echo "$(tput setaf 2)Update was successful $(tput sgr0)"
+			$MABEN_PATH/bin/postupdate
+		else
+			echo "$(tput setaf 1)update errors. Check for dependencies $(tput sgr0)"
+		fi
+
     ;;
     --check)
 		if [ ! -f $FLAG ]; then
