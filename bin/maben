@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FLAG=$MABEN_PATH/maben_updated
-LASTMOD_MAX=0
+LASTMOD_MAX=604800 # 7 days
 
 echo "$(tput setaf 2)$MABEN $(tput sgr0)"
 
