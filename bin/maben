@@ -1,5 +1,19 @@
 #!/bin/bash
 
+function check {
+	echo "$(tput setaf 3)Checking for update... $(tput sgr0)"
+	cd $MABEN_PATH
+	git fetch
+	outdated="$(git status | grep behind -c)"
+	if [ $outdated -ne 0 ]; then
+		echo "$(tput setaf 1)maben is outdated. Use \"maben update\" command. $(tput sgr0)"
+	else
+		echo Already up-to-date.
+		touch $FLAG
+	fi
+}
+
+
 FLAG=$MABEN_PATH/maben_updated
 LASTMOD_MAX=604800 # 7 days
 
@@ -27,22 +41,17 @@ case $key in
 		fi
 
     ;;
-    --check)
+    --autocheck)
 		if [ ! -f $FLAG ]; then
 			touch $FLAG
 		fi
 		lastmod=$(( $(date +%s) - $(stat -c %Y $FLAG) ))
 		if [ $lastmod -gt $LASTMOD_MAX ]; then
-			echo "$(tput setaf 3)Checking for update... $(tput sgr0)"
-			cd $MABEN_PATH
-			git fetch
-			outdated="$(git status | grep behind -c)"
-			if [ $outdated -ne 0 ]; then
-				echo "$(tput setaf 1)maben is outdated. Use \"maben update\" command. $(tput sgr0)"
-			else
-				touch $FLAG
-			fi
+			check
 		fi
+    ;;
+    --check)
+        check
     ;;
     *)
             # unknown option

@@ -32,5 +32,5 @@ if [ -f $FLAG ]; then
 	else
 		echo "maben already initializated";
 	fi
-	maben --check
+	maben --autocheck
 fi
