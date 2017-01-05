@@ -1,0 +1,23 @@
+#!/bin/bash
+
+SHEET_PATH=$MABEN_PATH/doc/sheets
+
+if [ $# -gt 0 ]; then
+	while [[ $# -gt 0 ]]
+	do
+	key="$1"
+
+		file=$SHEET_PATH/$key
+
+		echo $file
+
+		if [ ! -f $file ]; then
+			echo "Not found help for '$key'"
+		else
+			less $file
+		fi
+	shift
+	done
+else
+	ls $SHEET_PATH | less
+fi
