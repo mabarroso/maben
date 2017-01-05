@@ -1,9 +1,8 @@
 #!/bin/bash
 
 FLAG=$MABEN_PATH/maben_updated
-LASTMOD_MAX=604800 #7 days
+LASTMOD_MAX=0
 
-echo $FLAG;
 echo "$(tput setaf 2)$MABEN $(tput sgr0)"
 
 while [[ $# -gt 0 ]]
@@ -14,7 +13,8 @@ case $key in
     -h|--help)
     ;;
     update)
-		cd $MABEN_PATH && git pull
+		cd $MABEN_PATH && git pull && touch $FLAG
+		unset $MABEN && $MABEN_PATH/init
     ;;
     --check)
 		if [ ! -f $FLAG ]; then
@@ -22,7 +22,15 @@ case $key in
 		fi
 		lastmod=$(( $(date +%s) - $(stat -c %Y $FLAG) ))
 		if [ $lastmod -gt $LASTMOD_MAX ]; then
-			echo -e "Please, update script. Use \"maben update\" command."
+			echo "$(tput setaf 3)Checking for update... $(tput sgr0)"
+			cd $MABEN_PATH
+			git fetch
+			outdated="$(git status | grep behind -c)"
+			if [ $outdated -ne 0 ]; then
+				echo "$(tput setaf 1)maben is outdated. Use \"maben update\" command. $(tput sgr0)"
+			else
+				touch $FLAG
+			fi
 		fi
     ;;
     *)
