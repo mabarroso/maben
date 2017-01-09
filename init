@@ -26,7 +26,9 @@ fi
 
 if [ -f $FLAG ]; then
 	if [ -z ${MABEN+x} ]; then
-		export MABEN="maben v$VERSION.$VERSION_COUNT initializated at `date` to $DIR"
+		echo "v$VERSION.$VERSION_COUNT" > $DIR/maben_version
+		echo "`date`" > $DIR/maben_init_date
+		export MABEN="maben v$VERSION.$VERSION_COUNT"
 		export MABEN_PATH=$DIR
 		export PATH=$PATH:$DIR/bin
 	else

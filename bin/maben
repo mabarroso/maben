@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function header {
+  echo "$(tput setaf 2)$MABEN $(tput sgr0)"
+}
+
 function check {
 	echo "$(tput setaf 3)Checking for update... $(tput sgr0)"
 	cd $MABEN_PATH
@@ -17,7 +21,13 @@ function check {
 FLAG=$MABEN_PATH/maben_updated
 LASTMOD_MAX=604800 # 7 days
 
-echo "$(tput setaf 2)$MABEN $(tput sgr0)"
+if [ -z ${MABEN+x} ]; then
+	echo "$(tput setaf 1)maben not initializated $(tput sgr0)"
+	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+	echo "Try exec: \"source ${DIR}/init\""
+	exit 1
+fi
+
 
 while [[ $# -gt 0 ]]
 do
@@ -25,10 +35,20 @@ key="$1"
 
 case $key in
     -h|--help)
+    	header
     ;;
     -v|--version)
+    	header
+      	cd $MABEN_PATH
+      	VDATE="$( git log -1 --format=%cd -1 --date=local)"
+      	VERSION=`cat maben_version`
+      	INIT_DATE=`cat maben_init_date`
+      	echo " Version ${VERSION} at ${VDATE}"
+      	echo " Run path $MABEN_PATH"
+      	echo " Initiated ${INIT_DATE}"
     ;;
     update)
+    	header
     	echo "$(tput setaf 3)Updating... $(tput sgr0)"
 		cd $MABEN_PATH && git pull && touch $FLAG
 		#unset MABEN && source $MABEN_PATH/init
@@ -47,10 +67,12 @@ case $key in
 		fi
 		lastmod=$(( $(date +%s) - $(stat -c %Y $FLAG) ))
 		if [ $lastmod -gt $LASTMOD_MAX ]; then
+			header
 			check
 		fi
     ;;
     --check)
+    	header
         check
     ;;
     *)
