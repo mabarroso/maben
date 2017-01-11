@@ -1,5 +1,16 @@
 #!/bin/bash
 
+function format_timestamp {
+  local date=`perl -le 'my (\$sec,\$min,\$hour,\$mday,\$mon,\$year,\$wday,\$yday,\$isdst)=localtime(\$ARGV[0]); my \$nice_timestamp = sprintf ( "%04d-%02d-%02d", \$year+1900,\$mon+1,\$mday); print \$nice_timestamp;' $1`
+  echo $date
+}
+
+function format_timestamp_compact {
+  local date=`perl -le 'my (\$sec,\$min,\$hour,\$mday,\$mon,\$year,\$wday,\$yday,\$isdst)=localtime(\$ARGV[0]); my \$nice_timestamp = sprintf ( "%04d%02d%02d", \$year+1900,\$mon+1,\$mday); print \$nice_timestamp;' $1`
+  echo $date
+}
+
+
 if [ -z "$PS1" ] ; then
     echo -e "This script must be sourced. Use \"source ${BASH_SOURCE[0]}\" instead."
     exit
@@ -10,8 +21,8 @@ FLAG=$DIR/maben_set
 
 VDATE_TIMESTAMP="$( cd ${DIR} && git log -1 --format=%at -1)"
 VDATE_TIMESTAMP_PREVIOUS="$(($VDATE_TIMESTAMP - 86400))"
-VDATE="$( date --date @$VDATE_TIMESTAMP_PREVIOUS +'%Y-%m-%d')"
-VERSION="$( date --date @$VDATE_TIMESTAMP +'%y%m%d')"
+VDATE=$(format_timestamp $VDATE_TIMESTAMP_PREVIOUS)
+VERSION=$(format_timestamp_compact @$VDATE_TIMESTAMP)
 VERSION_COUNT="$( cd ${DIR} && git rev-list --count --since=$VDATE HEAD)"
 
 if [ ! -f $FLAG ]; then
