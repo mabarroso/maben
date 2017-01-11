@@ -22,7 +22,7 @@ FLAG=$DIR/maben_set
 VDATE_TIMESTAMP="$( cd ${DIR} && git log -1 --format=%at -1)"
 VDATE_TIMESTAMP_PREVIOUS="$(($VDATE_TIMESTAMP - 86400))"
 VDATE=$(format_timestamp $VDATE_TIMESTAMP_PREVIOUS)
-VERSION=$(format_timestamp_compact @$VDATE_TIMESTAMP)
+VERSION=$(format_timestamp_compact $VDATE_TIMESTAMP)
 VERSION_COUNT="$( cd ${DIR} && git rev-list --count --since=$VDATE HEAD)"
 
 if [ ! -f $FLAG ]; then
